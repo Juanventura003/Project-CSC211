@@ -1,0 +1,150 @@
+package New;
+
+import java.util.*;
+
+// Base class representing a Product in the store
+class Product {
+    String name;
+    double price;
+
+    // Constructor to create a product with a name and price
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    // Convert product details to a string
+    public String toString() {
+        return name + " - $" + price;
+    }
+
+    // Getter for the product price which will be used to calculate totals
+    public double getPrice() {
+        return price;
+    }
+}
+
+//  product category for Electronics
+class Electronics extends Product {
+    public Electronics(String name, double price) {
+        super(name, price);
+    }
+}
+
+//  product category for Grocery
+class Grocery extends Product {
+    public Grocery(String name, double price) {
+        super(name, price);
+    }
+}
+
+// product category for Clothing
+class Clothing extends Product {
+    public Clothing(String name, double price) {
+        super(name, price);
+    }
+}
+
+// Base class for users (both customers will extend this class)
+class User {
+    String username;
+
+    // Constructor to initialize a user's username
+    public User(String username) {
+        this.username = username;
+    }
+
+    // A method to represent a user's details
+    public String toString() {
+        return "Costumer: " + username;
+    }
+}
+
+// Customer class representing a user who can make purchases
+class Customer extends User {
+    List<Product> cart;
+
+    // Constructor initializes the cart as an empty list
+    public Customer(String username) {
+        super(username);
+        this.cart = new ArrayList<>();
+    }
+
+    // Adds a product to the customer's cart
+    public void addToCart(Product product) {
+        cart.add(product);
+    }
+
+    // Removes a product from the customer's cart
+    public void removeFromCart(Product product) {
+        if (cart.remove(product)) {
+            System.out.println(product + " removed");
+        } else {
+            System.out.println("Product not found: " + product);
+        }
+    }
+
+    // Calculate the total cost of all items in the cart
+    public double calculateTotal() {
+        return cart.stream().mapToDouble(Product::getPrice).sum();
+    }
+
+    // Display customer details
+    @Override
+    public String toString() {
+        return "Customer: " + username;
+    }
+
+    // List all products in the customer's cart
+    public void listCart() {
+        System.out.println("\nItems in your cart:");
+        if (cart.isEmpty()) {
+            System.out.println("No products in cart.");
+        } else {
+            cart.forEach(System.out::println);
+        }
+    }
+}
+
+public class ECommerce {
+//main method to put everything together
+    public static void main(String[] args) {
+        Product laptop = new Electronics("Laptop", 1000);
+        Product smartphone = new Electronics("Smartphone", 800);
+        Product tablet = new Electronics("Tablet", 500);
+        Product smartwatch = new Electronics("Smartwatch", 150);
+
+        Product apple = new Grocery("Apple", 1.50);
+        Product milk = new Grocery("Milk", 3.00);
+        Product eggs = new Grocery("Bread", 2.50);
+
+        Product tshirt = new Clothing("T-shirt", 19.99);
+        Product jeans = new Clothing("Jeans", 39.99);
+        Product jacket = new Clothing("Jacket", 79.99);
+
+        // Create a customer to simulate shopping behavior
+        Customer customer = new Customer("Juan");
+
+        // Customer adds a few products from different categories to their cart
+        customer.addToCart(laptop);
+        customer.addToCart(smartphone);
+        customer.addToCart(apple);
+        customer.addToCart(tshirt);
+        customer.addToCart(eggs);
+
+        // Shows the total price for the customer's cart
+        System.out.println("\n" + customer + " has a total cart value of: $" + customer.calculateTotal());
+
+        // Lists all items in the customer's cart
+        customer.listCart();
+
+        // Customer removes one product from their cart
+        customer.removeFromCart(eggs);
+
+        // Lists updated items in the cart after removing a product
+        customer.listCart();
+
+        // Shows the final total price for the customer's cart
+        System.out.println("\n" + customer + " has a total cart value of: $" + customer.calculateTotal());
+    }
+}
